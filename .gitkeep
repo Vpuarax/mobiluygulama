@@ -1,0 +1,130 @@
+ (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
+diff --git a/CAPACITOR_ANDROID_WINDOWS.md b/CAPACITOR_ANDROID_WINDOWS.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..2caf22d460c36d1be8817ef04f4587cf874919bf
+--- /dev/null
++++ b/CAPACITOR_ANDROID_WINDOWS.md
+@@ -0,0 +1,120 @@
++# Windows'da Capacitor ile Android Uygulaması (Web: https://superpool.online)
++
++Bu doküman, Windows ortamında Capacitor ile yalnızca web içeriğini (https://superpool.online) yükleyen bir Android uygulaması üretmek için gerekli adımları ve komutları içerir.
++
++## Gereksinimler
++
++- **Node.js (LTS)**: https://nodejs.org/
++- **npm** (Node.js ile birlikte gelir)
++- **Java JDK 17** (Android Studio ile birlikte kurulabilir)
++- **Android Studio**: https://developer.android.com/studio
++  - Android SDK Platform + Build Tools kurulmuş olmalı.
++  - İlk kurulumdan sonra **SDK Manager** üzerinden en az bir **Android SDK Platform** (örn. Android 14) yüklü olmalı.
++
++## Proje oluşturma
++
++PowerShell veya CMD içinde aşağıdaki komutları çalıştırın:
++
++```bash
++# 1) Yeni bir klasör oluşturup içine girin
++mkdir superpool-capacitor
++cd superpool-capacitor
++
++# 2) Basit bir web projesi iskeleti oluşturun
++npm init -y
++
++# 3) Capacitor kurun
++npm i @capacitor/core @capacitor/cli
++
++# 4) Capacitor yapılandırmasını başlatın
++npx cap init superpool "com.superpool.app" --web-dir=www
++
++# 5) Web içeriği için minimal bir index.html oluşturun
++mkdir www
++@'
++<!doctype html>
++<html lang="tr">
++  <head>
++    <meta charset="utf-8" />
++    <meta name="viewport" content="width=device-width, initial-scale=1" />
++    <title>Superpool</title>
++  </head>
++  <body>
++    <h1>Superpool uygulaması</h1>
++  </body>
++</html>
++'@ | Out-File -Encoding utf8 www/index.html
++```
++
++> Not: `server.url` kullanıldığında `www` klasörü yalnızca başlangıç için gereklidir; uygulama web içeriğini uzaktan yükleyecektir.
++
++## `capacitor.config.json` güncelleme
++
++Aşağıdaki alanı dosyaya ekleyin (veya güncelleyin):
++
++```json
++{
++  "appId": "com.superpool.app",
++  "appName": "superpool",
++  "webDir": "www",
++  "server": {
++    "url": "https://superpool.online",
++    "cleartext": false
++  }
++}
++```
++
++## Android platformunu ekleme
++
++```bash
++npx cap add android
++```
++
++Android platformu oluşturulduktan sonra Capacitor senkronizasyonu için:
++
++```bash
++npx cap sync android
++```
++
++## Android Studio’da debug APK üretme
++
++### 1) Android Studio’yu açma
++
++```bash
++npx cap open android
++```
++
++### 2) Android Studio içinde APK üretme
++
++Android Studio açıldığında:
++
++- **Build > Build Bundle(s) / APK(s) > Build APK(s)** yolunu izleyin.
++- Derleme tamamlandığında “APK(s) generated successfully” bildirimi görünür.
++
++### 3) APK konumu
++
++Genellikle aşağıdaki dizinde oluşur:
++
++```
++android/app/build/outputs/apk/debug/app-debug.apk
++```
++
++### 4) (İsteğe bağlı) Komut satırı ile debug APK
++
++Android Studio kurulu ve ortam değişkenleri doğru ayarlanmışsa, aşağıdaki komut da kullanılabilir:
++
++```bash
++cd android
++./gradlew assembleDebug
++```
++
++APK çıktısı aynı dizinde oluşur:
++
++```
++android/app/build/outputs/apk/debug/app-debug.apk
++```
++
++## Notlar
++
++- İlk kez çalıştırırken Android Studio, Gradle ve SDK bileşenlerini indirebilir; bu normaldir.
++- `server.url` ile dış web içeriği kullanıldığı için cihaz internet bağlantısına ihtiyaç duyacaktır.
+ 
+EOF
+)
