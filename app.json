@@ -1,0 +1,24 @@
+{
+  "expo": {
+    "name": "Superkim Business",
+    "slug": "taskapp",
+    "version": "1.0.1",
+    "icon": "./assets/icon.png",
+    "android": {
+      "package": "com.superkimbusiness.taskapp",
+      "googleServicesFile": "./google-services.json"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "b6bca8bb-0d2d-4e03-a0df-66397bb3043c"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/b6bca8bb-0d2d-4e03-a0df-66397bb3043c"
+    },
+    "ios": {}
+  }
+}
